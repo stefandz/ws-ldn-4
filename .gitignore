@@ -10,3 +10,5 @@ tools/wavetable-gen/target
 /ex08/
 /ex07b/
 /uart/
+.settings/language.settings.xml
+

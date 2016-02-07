@@ -104,7 +104,7 @@ inline float ct_poly_blep(float t, const float dt) {
     else if (t > 1.f - dt) {
         t = (t - 1.0f) / dt;
         // 2 * (t^2/2 + t + 0.5)
-        return t * t + t + t + 1.;
+        return t * t + t + t + 1.f;
     }
     // 0 otherwise
     else {

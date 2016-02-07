@@ -169,6 +169,72 @@ uint8_t ct_synth_process_osc_impulse(CT_DSPNode *node, CT_DSPStack *stack,
     return 0;
 }
 
+uint8_t ct_synth_process_osc_apple_breathe(CT_DSPNode *node, CT_DSPStack *stack,
+                                 CT_Synth *synth, uint32_t offset) {
+    CT_UNUSED(synth);
+    CT_UNUSED(stack);
+    CT_OscState *state = (CT_OscState *)node->state;
+    const float freq = state->freq;
+    const float *lfo = state->lfo + offset;
+    //const float *env = state->env + offset;
+    float phase = state->phase;
+    float *buf = node->buf + offset;
+    uint32_t len = AUDIO_BUFFER_SIZE - offset;
+    while (len--) {
+        phase +=
+            freq + (*lfo++ * state->lfoDepth); // + (*env++ * state->envDepth);
+        TRUNC_PHASE(phase);
+        // 1/(e-1/2(e+1/e)) * (e^sin(phase) - 1/2(+1/e))
+        *buf++ = state->dcOffset + 0.85091812823932 * (expf(ct_fast_sin(phase)) - 1.54308063481525);
+    }
+    state->phase = phase;
+    return 0;
+}
+
+uint8_t ct_synth_process_osc_apple_breathe_sq(CT_DSPNode *node, CT_DSPStack *stack,
+                                 CT_Synth *synth, uint32_t offset) {
+    CT_UNUSED(synth);
+    CT_UNUSED(stack);
+    CT_OscState *state = (CT_OscState *)node->state;
+    const float freq = state->freq;
+    const float *lfo = state->lfo + offset;
+    //const float *env = state->env + offset;
+    float phase = state->phase;
+    float *buf = node->buf + offset;
+    uint32_t len = AUDIO_BUFFER_SIZE - offset;
+    while (len--) {
+        phase +=
+            freq + (*lfo++ * state->lfoDepth); // + (*env++ * state->envDepth);
+        TRUNC_PHASE(phase);
+        // (1/(e-1/2(e+1/e)) * (e^sin(phase) - 1/2(+1/e)))^2
+        *buf++ = state->dcOffset + powf(0.85091812823932 * (expf(ct_fast_sin(phase)) - 1.54308063481525),2.f);
+    }
+    state->phase = phase;
+    return 0;
+}
+
+uint8_t ct_synth_process_osc_apple_breathe_cub(CT_DSPNode *node, CT_DSPStack *stack,
+                                 CT_Synth *synth, uint32_t offset) {
+    CT_UNUSED(synth);
+    CT_UNUSED(stack);
+    CT_OscState *state = (CT_OscState *)node->state;
+    const float freq = state->freq;
+    const float *lfo = state->lfo + offset;
+    //const float *env = state->env + offset;
+    float phase = state->phase;
+    float *buf = node->buf + offset;
+    uint32_t len = AUDIO_BUFFER_SIZE - offset;
+    while (len--) {
+        phase +=
+            freq + (*lfo++ * state->lfoDepth); // + (*env++ * state->envDepth);
+        TRUNC_PHASE(phase);
+        // (1/(e-1/2(e+1/e)) * (e^sin(phase) - 1/2(+1/e)))^2
+        *buf++ = state->dcOffset + powf(0.85091812823932 * (expf(ct_fast_sin(phase)) - 1.54308063481525),111.f);
+    }
+    state->phase = phase;
+    return 0;
+}
+
 float ct_osc_pblep_saw(float t, const float dt, const float lfo) {
     return 2.0f * t - 1.0f;
 }

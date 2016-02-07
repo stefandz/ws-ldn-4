@@ -20,14 +20,22 @@ static SynthPreset synthPresets[] = { { .osc1Gain = 0.3f, .osc2Gain = 0.3f,
 		.detune = 0.5066f, .filterCutoff = 8000.0f, .filterQ = 0.9f, .feedback =
 				0.5f, .width = 0.66f, .osc1Fn = 4, .osc2Fn = 5, .filterType = 0,
 		.tempo = 150, .attack = 0.01f, .decay = 0.05f, .sustain = 0.25f,
+		.release = 0.66f, .string = 0.02f, .volume = VOLUME },
+		{ .osc1Gain = 0.3f, .osc2Gain = 0.3f,
+		.detune = 0.5066f, .filterCutoff = 8000.0f, .filterQ = 0.9f, .feedback =
+				0.5f, .width = 0.66f, .osc1Fn = 6, .osc2Fn = 6, .filterType = 0,
+		.tempo = 150, .attack = 0.01f, .decay = 0.05f, .sustain = 0.25f,
 		.release = 0.66f, .string = 0.02f, .volume = VOLUME } };
 
-static SynthPreset *preset = &synthPresets[0];
+static SynthPreset *preset = &synthPresets[1];
+
+#define NUM_OSC_TYPES 9
 
 static CT_DSPNodeHandler oscFunctions[] = { ct_synth_process_osc_spiral,
 		ct_synth_process_osc_sin, ct_synth_process_osc_square,
 		ct_synth_process_osc_saw, ct_synth_process_osc_sawsin,
-		ct_synth_process_osc_tri };
+		ct_synth_process_osc_tri, ct_synth_process_osc_apple_breathe,
+		ct_synth_process_osc_apple_breathe_sq, ct_synth_process_osc_apple_breathe_cub};
 
 static CT_BiquadType filterTypes[] = { LPF, HPF, BPF, PEQ };
 
@@ -153,11 +161,13 @@ void processMidiPackets() {
 					if (preset->osc1Fn) {
 						preset->osc1Fn--;
 					} else {
-						preset->osc1Fn = 5;
+						preset->osc1Fn = NUM_OSC_TYPES-1;
 					}
+					//preset->osc1Fn = 1;
 					break;
 				case MIDI_CC_BT_RIGHT:
-					preset->osc1Fn = (preset->osc1Fn + 1) % 6;
+					preset->osc1Fn = (preset->osc1Fn + 1) % NUM_OSC_TYPES;
+					//preset->osc1Fn = 8;
 					break;
 				case MIDI_CC_BT_TRACK_LEFT:
 					if (transposeID == 0) {

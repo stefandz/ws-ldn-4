@@ -56,6 +56,13 @@ uint8_t ct_synth_process_osc_pblep(CT_DSPNode *node, CT_DSPStack *stack,
                                    CT_Synth *synth, uint32_t offset);
 uint8_t ct_synth_process_osc_spiral(CT_DSPNode *node, CT_DSPStack *stack,
                                     CT_Synth *synth, uint32_t offset);
+uint8_t ct_synth_process_osc_apple_breathe(CT_DSPNode *node, CT_DSPStack *stack,
+                                    CT_Synth *synth, uint32_t offset);
+uint8_t ct_synth_process_osc_apple_breathe_sq(CT_DSPNode *node, CT_DSPStack *stack,
+                                    CT_Synth *synth, uint32_t offset);
+uint8_t ct_synth_process_osc_apple_breathe_cub(CT_DSPNode *node, CT_DSPStack *stack,
+                                    CT_Synth *synth, uint32_t offset);
+
 
 void ct_synth_set_osc_lfo(CT_DSPNode *node, const CT_DSPNode *lfo, float depth);
 void ct_synth_set_osc_env(CT_DSPNode *node, const CT_DSPNode *env, float depth);
